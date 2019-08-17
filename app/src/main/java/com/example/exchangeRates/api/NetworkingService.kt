@@ -4,12 +4,12 @@ import com.example.exchangeRates.model.ConversionRates
 import io.reactivex.Observable
 
 interface ServerAPI {
-    fun getConversionRatesDetails(forCurrency: String): Observable<ConversionRates>
+    fun getConversionRatesDetailsFor(currency: String): Observable<ConversionRates>
 }
 
 object ServerAPIImpl : ServerAPI {
-    override fun getConversionRatesDetails(forCurrency: String): Observable<ConversionRates> =
+    override fun getConversionRatesDetailsFor(currency: String): Observable<ConversionRates> =
             RetrofitClient.retrofit.create(NetworkingService::class.java)
-                .getCurrencyRatesFor("EUR")
+                .getCurrencyRatesFor(currency)
 
 }

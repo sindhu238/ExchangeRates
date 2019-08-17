@@ -2,27 +2,28 @@ package com.example.exchangeRates.activities.exchangeRates
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import com.example.exchangeRates.api.ServerAPI
+import com.example.exchangeRates.api.ServerAPIImpl
 import com.example.exchangeRates.di.viewModel.MyViewModelFactory
-import com.example.exchangeRates.di.viewModel.ViewModelFactoryModule
 import com.example.exchangeRates.di.viewModel.ViewModelKey
 import dagger.Module
 import dagger.Provides
-import dagger.android.ContributesAndroidInjector
 import dagger.multibindings.IntoMap
 
-@Module(includes = [ViewModelFactoryModule::class, ExchangeRatesModule.ProvideViewModel::class])
+@Module
 abstract class ExchangeRatesModule {
-    @ContributesAndroidInjector(modules = [InjectViewModel::class])
-    abstract fun bind(): ExchangeRatesActivity
 
     @Module
     class ProvideViewModel {
 
         @Provides
+        fun provideServerApi(): ServerAPI = ServerAPIImpl
+
+        @Provides
         @IntoMap
         @ViewModelKey(ExchangeRatesViewModel::class)
-        fun provideViewModel(): ViewModel =
-            ExchangeRatesViewModel()
+        fun provideViewModel(serverAPI: ServerAPI): ViewModel =
+            ExchangeRatesViewModel(serverAPI)
     }
 
     @Module
@@ -33,7 +34,6 @@ abstract class ExchangeRatesModule {
             factory: MyViewModelFactory,
             target: ExchangeRatesActivity
         ): ExchangeRatesViewModel = ViewModelProvider(target, factory).get(ExchangeRatesViewModel::class.java)
-
     }
 
 }

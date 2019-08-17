@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.example.exchangeRates.R
 import com.example.exchangeRates.extensions.toDouble
 import com.example.exchangeRates.model.CurrencyRate
 import com.jakewharton.rxbinding3.view.clicks
@@ -29,13 +30,7 @@ class ExchangeRatesAdapter(
     inner class MyViewHolder(view: View) : RecyclerView.ViewHolder(view)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder =
-        MyViewHolder(
-            LayoutInflater.from(parent.context).inflate(
-                com.example.exchangeRates.R.layout.rates_adapter_view,
-                parent,
-                false
-            )
-        )
+        MyViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.rates_adapter_view, parent, false))
 
     override fun getItemCount(): Int = items.size
 
@@ -57,10 +52,7 @@ class ExchangeRatesAdapter(
             flagImageView.setImageDrawable(getDrawableFor(items[position].currency, context))
 
             if (position == 0) {
-                rateET.setSelection(rateET.text.count())
-                rateET.canUpdate = false
-                rateET.isFocusable = true
-                rateET.isFocusableInTouchMode = true
+                rateET.setFocusAndSelection()
             }
 
             rateET.textChanges.map {
@@ -74,7 +66,6 @@ class ExchangeRatesAdapter(
             }.subscribe(valueChanges)
         }
     }
-
 
     private fun getDrawableFor(currency: Currency, context: Context): Drawable? =
         Locale.getAvailableLocales().firstOrNull {

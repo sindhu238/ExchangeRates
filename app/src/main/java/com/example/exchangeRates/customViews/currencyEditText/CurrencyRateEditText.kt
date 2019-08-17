@@ -20,10 +20,8 @@ class CurrencyRateEditText @JvmOverloads constructor(
     init {
         textChanges()
             .skipInitialValue()
-            .filter { !canUpdate }
-            .map {
-                it.toString()
-            }
+            .filter { !canUpdate && this.isShown }
+            .map { it.toString() }
             .subscribe(viewModel.textChanges)
 
         viewModel.amendedTextStream.subscribe(textChanges)
@@ -32,5 +30,12 @@ class CurrencyRateEditText @JvmOverloads constructor(
     override fun onDetachedFromWindow() {
         super.onDetachedFromWindow()
         bag.clear()
+    }
+
+    fun setFocusAndSelection() {
+        setSelection(text.count())
+        canUpdate = false
+        isFocusable = true
+        isFocusableInTouchMode = true
     }
 }

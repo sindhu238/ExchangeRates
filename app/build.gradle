@@ -57,6 +57,9 @@ dependencies {
     // FlagKit
     implementation 'com.jwang123.flagkit:flagkit:1.0'
 
+    // CircledImageView
+    implementation 'de.hdodenhof:circleimageview:3.0.0'
+
     // Testing
     testImplementation('android.arch.core:core-testing:1.1.1')
     testImplementation 'junit:junit:4.12'

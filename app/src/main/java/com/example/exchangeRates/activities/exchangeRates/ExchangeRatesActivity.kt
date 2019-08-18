@@ -17,7 +17,7 @@ import javax.inject.Inject
 class ExchangeRatesActivity : DaggerAppCompatActivity() {
 
     @Inject
-    lateinit var viewModel: ExchangeRatesViewModel
+    lateinit var viewModel: ExchangeRatesViewModelType
 
     private val bag = CompositeDisposable()
 
@@ -50,7 +50,7 @@ class ExchangeRatesActivity : DaggerAppCompatActivity() {
             .subscribe {
                 (ratesRecyclerView.adapter as? ExchangeRatesAdapter)?.let { adapter ->
                     adapter.items = adapter.items.mapIndexed { index, currencyRate ->
-                        currencyRate.copy(rate = if (index < it.size - 1) it[index] else -1.0)
+                        currencyRate.copy(rate = if (index < it.size) it[index] else -1.0)
                     }
                     it.forEachIndexed { i, _ ->
                         if (i != 0)

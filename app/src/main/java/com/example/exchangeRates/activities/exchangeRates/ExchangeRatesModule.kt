@@ -33,7 +33,7 @@ abstract class ExchangeRatesModule {
         fun provideExchangeRatesViewModel(
             factory: MyViewModelFactory,
             target: ExchangeRatesActivity
-        ): ExchangeRatesViewModel = ViewModelProvider(target, factory).get(ExchangeRatesViewModel::class.java)
+        ): ExchangeRatesViewModelType = ViewModelProvider(target, factory).get(ExchangeRatesViewModel::class.java)
     }
 
 }

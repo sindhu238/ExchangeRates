@@ -70,8 +70,12 @@ dependencies {
     androidTestImplementation "com.google.dagger:dagger:2.22.1"
     androidTestImplementation "com.google.dagger:dagger-android-support:2.22.1"
     kaptAndroidTest "com.google.dagger:dagger-android-processor:2.22.1"
+
+    androidTestImplementation 'org.mockito:mockito-core:2.27.0'
+    androidTestImplementation 'com.nhaarman:mockito-kotlin-kt1.1:1.5.0'
     androidTestAnnotationProcessor "com.google.dagger:dagger-compiler:2.22.1"
     androidTestImplementation("org.mockito:mockito-android:2.27.0")
     androidTestImplementation 'androidx.test:rules:1.2.0'
     androidTestImplementation 'androidx.test:runner:1.2.0'
+
 }

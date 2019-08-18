@@ -14,24 +14,30 @@ import java.util.*
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
-class ExchangeRatesViewModel @Inject constructor(serverAPI: ServerAPI) : ViewModel() {
+interface ExchangeRatesViewModelType {
+    val selectedCurrencyRate: BehaviorSubject<CurrencyRate>
+    val contentToDisplay: BehaviorSubject<List<CurrencyRate>>
+    val rateUpdates: BehaviorSubject<List<Double>>
+}
+
+class ExchangeRatesViewModel @Inject constructor(serverAPI: ServerAPI) : ViewModel(), ExchangeRatesViewModelType {
 
     /**
      *  Observable cum observer used to track changes in base currency or rate of the currency
      */
-    val selectedCurrencyRate = BehaviorSubject.createDefault(CurrencyRate(Currency.getInstance("EUR"), 100.0))
+    override val selectedCurrencyRate = BehaviorSubject.createDefault(CurrencyRate(Currency.getInstance("EUR"), 100.0))
 
     /**
      *  Stream that emits data when base currency has been changed
      *  Data emitted: List of CurrencyRates
      */
-    val contentToDisplay: BehaviorSubject<List<CurrencyRate>> = BehaviorSubject.create()
+    override val contentToDisplay: BehaviorSubject<List<CurrencyRate>> = BehaviorSubject.create()
 
     /**
      *  Stream that emits data when rate of base currency has been changed
      *  Data emitted: List of rates of all currencies
      */
-    val rateUpdates = BehaviorSubject.create<List<Double>>()
+    override val rateUpdates = BehaviorSubject.create<List<Double>>()
 
     /**
      *  Stream that makes the network call every one second or when different

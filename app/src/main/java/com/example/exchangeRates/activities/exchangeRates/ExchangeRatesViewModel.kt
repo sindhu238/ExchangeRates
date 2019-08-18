@@ -71,9 +71,7 @@ class ExchangeRatesViewModel @Inject constructor(serverAPI: ServerAPI) : ViewMod
         ratesStream.map { conversionRates ->
             conversionRates.rates.values.toList()
         }.distinctUntilChanged().subscribe(rateUpdates)
-
     }
-
 }
 
 

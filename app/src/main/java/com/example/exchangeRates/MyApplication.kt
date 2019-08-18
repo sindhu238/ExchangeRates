@@ -6,6 +6,8 @@ import com.example.exchangeRates.di.DaggerAppComponent
 import dagger.android.AndroidInjector
 import dagger.android.DispatchingAndroidInjector
 import dagger.android.HasActivityInjector
+import java.text.NumberFormat
+import java.util.*
 import javax.inject.Inject
 
 class MyApplication : Application(), HasActivityInjector {
@@ -19,4 +21,15 @@ class MyApplication : Application(), HasActivityInjector {
     }
 
     override fun activityInjector(): AndroidInjector<Activity> = dispatchingActivityInjector
+
+    companion object {
+        val localesWithCurrencies: Map<String, Currency> by lazy {
+            mutableMapOf<String, Currency>().apply {
+                NumberFormat.getAvailableLocales().map { locale ->
+                    put(locale.country, NumberFormat.getCurrencyInstance(locale).currency)
+                }
+            }
+        }
+    }
+
 }

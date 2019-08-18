@@ -1,31 +1,40 @@
 package com.example.exchangeRates.adapters
 
-import android.content.Context
-import android.graphics.drawable.Drawable
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.exchangeRates.R
+import com.example.exchangeRates.cache.RxDataCacheType
 import com.example.exchangeRates.extensions.toDouble
 import com.example.exchangeRates.model.CurrencyRate
 import com.jakewharton.rxbinding3.view.clicks
 import com.jwang123.flagkit.FlagKit
 import io.reactivex.subjects.PublishSubject
 import kotlinx.android.synthetic.main.rates_adapter_view.view.*
-import java.text.NumberFormat
 import java.util.*
+import javax.inject.Inject
 
 
 enum class PayloadType {
     Rate
 }
 
-class ExchangeRatesAdapter(
-    var items: List<CurrencyRate>
-) : RecyclerView.Adapter<ExchangeRatesAdapter.MyViewHolder>() {
+interface ExchangeRatesAdapterType {
 
-    val valueChanges = PublishSubject.create<CurrencyRate>()
+    /**
+     * Emits events when user clicks on the item or when user changes currency rate
+     * Data Emitted - Currency Rate
+     */
+    val valueChanges: PublishSubject<CurrencyRate>
+}
+
+class ExchangeRatesAdapter @Inject constructor(
+    var items: List<CurrencyRate>,
+    var dataCache: RxDataCacheType
+) : ExchangeRatesAdapterType, RecyclerView.Adapter<ExchangeRatesAdapter.MyViewHolder>() {
+
+    override val valueChanges = PublishSubject.create<CurrencyRate>()
 
     inner class MyViewHolder(view: View) : RecyclerView.ViewHolder(view)
 
@@ -49,7 +58,13 @@ class ExchangeRatesAdapter(
             currencyCodeTV.text = items[position].currency.currencyCode
             currencyNameTV.text = items[position].currency.displayName
             rateET.setText(items[position].rate.toString())
-            flagImageView.setImageDrawable(getDrawableFor(items[position].currency, context))
+            dataCache.getCountryForCurrency(items[position].currency)?.let { country ->
+                try {
+                    flagImageView.setImageDrawable(FlagKit.drawableWithFlag(context, country.toLowerCase()))
+                } catch (exception: Exception) {
+                    flagImageView.setImageDrawable(FlagKit.drawableWithFlag(context, Locale.getDefault().country.toLowerCase()))
+                }
+            }
 
             if (position == 0) {
                 rateET.setFocusAndSelection()
@@ -66,15 +81,4 @@ class ExchangeRatesAdapter(
             }.subscribe(valueChanges)
         }
     }
-
-    private fun getDrawableFor(currency: Currency, context: Context): Drawable? =
-        Locale.getAvailableLocales().firstOrNull {
-            NumberFormat.getCurrencyInstance(it).currency == currency
-        }?.let {
-            try {
-                FlagKit.drawableWithFlag(context, it.country.toLowerCase())
-            } catch (exception: Exception) {
-                return@let null
-            }
-        }
 }

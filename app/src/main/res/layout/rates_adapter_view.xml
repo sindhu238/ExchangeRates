@@ -55,6 +55,7 @@
 			android:textColor="@color/black"
 			style="@style/AppTheme.CustomEditText"
 			android:textStyle="bold"
+			android:imeOptions="actionDone"
 			android:gravity="center"
 			tools:targetApi="o"/>
 </androidx.constraintlayout.widget.ConstraintLayout>

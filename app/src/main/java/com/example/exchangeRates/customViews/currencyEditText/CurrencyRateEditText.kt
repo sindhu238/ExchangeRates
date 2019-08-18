@@ -11,13 +11,26 @@ class CurrencyRateEditText @JvmOverloads constructor(
     context: Context, attributesSet: AttributeSet? = null, defStyleAttr: Int = 0, defStyleRes: Int = 0
 ) : EditText(context, attributesSet, defStyleAttr, defStyleRes) {
 
-    val textChanges = PublishSubject.create<Double>()
     val viewModel = CurrencyEditTextViewModel()
-    var canUpdate: Boolean = true
+
+    /**
+     * Emits events when user changes rate of base currency
+     * Emitted Data - Rate of currency
+     */
+    val textChanges = PublishSubject.create<Double>()
+
+    /**
+     * Property that specifies if edit text can update values or not
+     * By default it is set to true
+     */
+    private var canUpdate: Boolean = true
 
     private val bag = CompositeDisposable()
 
     init {
+        isFocusable = false
+        isFocusableInTouchMode = false
+
         textChanges()
             .skipInitialValue()
             .filter { !canUpdate && this.isShown }
@@ -32,6 +45,10 @@ class CurrencyRateEditText @JvmOverloads constructor(
         bag.clear()
     }
 
+    /**
+     * Sets focus and selection to end of edit text
+     * Sets canUpdate to false - which means that editText cannot be updated
+     */
     fun setFocusAndSelection() {
         setSelection(text.count())
         canUpdate = false

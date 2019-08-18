@@ -10,6 +10,8 @@ import androidx.test.internal.runner.junit4.AndroidJUnit4ClassRunner
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.rule.ActivityTestRule
 import com.example.exchangeRates.MyApplication
+import com.example.exchangeRates.adapters.ExchangeRatesAdapter
+import com.example.exchangeRates.cache.RxDataCache
 import com.example.exchangeRates.model.CurrencyRate
 import com.nhaarman.mockito_kotlin.whenever
 import dagger.android.AndroidInjector
@@ -43,6 +45,7 @@ class ExchangeRatesActivityTest {
                     InstrumentationRegistry.getInstrumentation().targetContext.applicationContext as MyApplication
                 myApp.dispatchingActivityInjector = createFakeMainActivityInjector {
                     viewModel = fakeViewModel
+                    exchangeAdapter = ExchangeRatesAdapter(listOf(), RxDataCache)
                 }
             }
         }
